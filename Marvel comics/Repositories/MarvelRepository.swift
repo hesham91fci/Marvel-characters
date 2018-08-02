@@ -8,8 +8,22 @@
 
 import Foundation
 class MarvelRepository{
-    static let sharedMovieServices=MarvelRepository()
-    private init(){
-        
+    static let sharedMarvelRepository=MarvelRepository()
+    fileprivate var marvelCharacterRepository:MarvelCharactersRepository
+    fileprivate var keys: Dictionary<String, String>!
+    
+    fileprivate init(){
+        marvelCharacterRepository = MarvelCharactersRepository()
+    }
+    
+    func getKeys() -> Dictionary<String, String> {
+        if let path = Bundle.main.path(forResource: "Marvel Keys", ofType: "plist") {
+            self.keys = NSDictionary(contentsOfFile: path) as! Dictionary<String, String>
+        }
+        return self.keys
+    }
+    
+    func getMarvelCharactersRepository() -> MarvelCharactersRepository{
+        return marvelCharacterRepository
     }
 }

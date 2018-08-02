@@ -1,0 +1,9 @@
+/* 
+  Localizable.strings
+  IMDB search
+
+  Created by Hesham Ali on 7/11/18.
+  Copyright © 2018 Hesham Ali. All rights reserved.
+*/
+"HOST_URL" = "https://gateway.marvel.com";
+"CHARACTER_ENDPOINT" = "/v1/public/characters";

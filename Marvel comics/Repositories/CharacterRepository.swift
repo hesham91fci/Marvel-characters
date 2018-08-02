@@ -7,6 +7,6 @@
 //
 
 import Foundation
-protocol MarvelCharacters {
-    func loadMarvelCharacters() -> MarvelCharacter;
+protocol CharacterRepository {
+    func loadMarvelCharacters(completionHandler: @escaping (_ errorDescription: String, _ data: [MarvelCharacter]) -> Void)
 }

@@ -7,6 +7,20 @@
 //
 
 import Foundation
-class MarvelCharacter{
+import ObjectMapper
+class MarvelCharacter: Mappable{
+    var thumbnailPath:String!
+    var name:String!
+    var thumbnailExtenstion:String!
+    static var totalCharactersPerCall:Int!
+    static var totalCharacters:Int!
+    required init?(map: Map) {
+        
+    }
     
+    func mapping(map: Map) {
+        name    <- map["name"]
+        thumbnailPath         <- map["thumbnail.path"]
+        thumbnailExtenstion      <- map["thumbnail.extension"]
+    }
 }

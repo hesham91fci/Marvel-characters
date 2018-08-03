@@ -8,5 +8,5 @@
 
 import Foundation
 protocol CharacterRepository {
-    func loadMarvelCharacters(completionHandler: @escaping (_ errorDescription: String, _ data: [MarvelCharacter]) -> Void)
+    func loadMarvelCharacters(offest:Int, completionHandler: @escaping (_ errorDescription: String, _ data: [MarvelCharacter]) -> Void)
 }

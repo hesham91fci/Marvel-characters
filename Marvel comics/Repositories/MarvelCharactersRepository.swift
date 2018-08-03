@@ -9,8 +9,9 @@
 import Foundation
 import Alamofire
 import CryptoSwift
+import ObjectMapper
 class MarvelCharactersRepository : CharacterRepository{
-    func loadMarvelCharacters(completionHandler: @escaping (_ errorDescription: String, _ data: [MarvelCharacter]) -> Void){
+    func loadMarvelCharacters(offest offset:Int, completionHandler: @escaping (_ errorDescription: String, _ data: [MarvelCharacter]) -> Void){
         
         let keys = MarvelRepository.sharedMarvelRepository.getKeys()
         let urlPath = NSLocalizedString("HOST_URL", comment: "comment") + NSLocalizedString("CHARACTER_ENDPOINT", comment: "comment")
@@ -19,7 +20,8 @@ class MarvelCharactersRepository : CharacterRepository{
         let params: Parameters = [
             "apikey": keys["public key"]!,
             "ts": ts,
-            "hash": (ts + keys["private key"]! + keys["public key"]!).md5()
+            "hash": (ts + keys["private key"]! + keys["public key"]!).md5(),
+            "offset":"\(offset)"
         ]
         
         Alamofire.request(URL(string: urlPath)!,
@@ -27,8 +29,15 @@ class MarvelCharactersRepository : CharacterRepository{
                           parameters: params)
             .validate()
             .responseJSON { response in
-                if(!response.result.isSuccess) {
-                    completionHandler("", [])
+                if(response.result.isSuccess) {
+                    let JSONResponse = response.value as! [String:Any]
+                    let dataResponse = JSONResponse["data"] as! [String:Any]
+                    MarvelCharacter.totalCharactersPerCall = dataResponse["limit"] as! Int
+                    if(MarvelCharacter.totalCharacters==nil){
+                        MarvelCharacter.totalCharacters = dataResponse["total"] as! Int
+                    }
+                    let marvelCharacters = Mapper<MarvelCharacter>().mapArray(JSONArray: dataResponse["results"] as! [[String : Any]])
+                    completionHandler("", marvelCharacters)
                 }
                 else{
                     completionHandler("", [])

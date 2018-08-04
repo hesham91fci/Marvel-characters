@@ -97,7 +97,7 @@ class CharactersTableViewController: UIViewController, UITableViewDelegate,UITab
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let cellCharacters = searchController.isActive ? filteredCharacters : marvelCharacters
+        let cellCharacters = tableView == self.filteredCharactersTableView ? filteredCharacters : marvelCharacters
         let characterDetailsVC = self.storyboard?.instantiateViewController(withIdentifier: "CharacterDetailsViewController") as! CharacterDetailsViewController
         characterDetailsVC.marvelCharacter = cellCharacters[indexPath.row]
         self.navigationController?.pushViewController(characterDetailsVC, animated: true)

@@ -8,8 +8,6 @@
 
 import Foundation
 protocol CharacterDetailsView : NSObjectProtocol{
-    func startLoading()
-    func finishLoading()
     func setCharacterComics(characterComics:[CharacterDetails])
     func setCharacterStories(characterStories:[CharacterDetails])
     func setCharacterEvents(characterEvents:[CharacterDetails])
@@ -23,17 +21,16 @@ class CharacterDetailsPresenter{
         self.characterDetailsView = characterDetailsView
     }
     func loadCharacterDetails(characterID:Int){
-        characterDetailsView.startLoading()
-        self.loadCharacterComics(characterID: characterID)
-        /*self.loadCharacterEvents(characterID: characterID)
-        self.loadCharacterSeries(characterID: characterID)
-        self.loadCharacterStories(characterID: characterID)*/
-        
+        DispatchQueue.main.async {
+            self.loadCharacterComics(characterID: characterID)
+            self.loadCharacterEvents(characterID: characterID)
+            self.loadCharacterSeries(characterID: characterID)
+            self.loadCharacterStories(characterID: characterID)
+        }
     }
     
     fileprivate func loadCharacterComics(characterID:Int){
         MarvelRepository.sharedMarvelRepository.getMarvelCharacterDetailsRepository().loadMarvelResource(characterID: characterID, resource: "comics") { (status, marvelComics) in
-            self.characterDetailsView.finishLoading()
             if(!status.isEmpty){
                 self.characterDetailsView.setErrorLoading(status: status)
             }
@@ -45,7 +42,6 @@ class CharacterDetailsPresenter{
     
     fileprivate func loadCharacterStories(characterID:Int){
         MarvelRepository.sharedMarvelRepository.getMarvelCharacterDetailsRepository().loadMarvelResource(characterID: characterID, resource: "stories") { (status, marvelStories) in
-            self.characterDetailsView.finishLoading()
             if(!status.isEmpty){
                 self.characterDetailsView.setErrorLoading(status: status)
             }
@@ -57,7 +53,6 @@ class CharacterDetailsPresenter{
     
     fileprivate func loadCharacterEvents(characterID:Int){
         MarvelRepository.sharedMarvelRepository.getMarvelCharacterDetailsRepository().loadMarvelResource(characterID: characterID, resource: "events") { (status, marvelEvents) in
-            self.characterDetailsView.finishLoading()
             if(!status.isEmpty){
                 self.characterDetailsView.setErrorLoading(status: status)
             }
@@ -69,7 +64,6 @@ class CharacterDetailsPresenter{
     
     fileprivate func loadCharacterSeries(characterID:Int){
         MarvelRepository.sharedMarvelRepository.getMarvelCharacterDetailsRepository().loadMarvelResource(characterID: characterID, resource: "series") { (status, marvelSeries) in
-            self.characterDetailsView.finishLoading()
             if(!status.isEmpty){
                 self.characterDetailsView.setErrorLoading(status: status)
             }

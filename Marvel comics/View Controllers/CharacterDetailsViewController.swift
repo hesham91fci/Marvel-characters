@@ -19,35 +19,60 @@ class CharacterDetailsViewController: UIViewController, UICollectionViewDelegate
     var characterDetailsPresenter:CharacterDetailsPresenter!
     @IBOutlet weak var comicsCollectionView: UICollectionView!
     
+    @IBOutlet weak var eventsCollectionView: UICollectionView!
+    @IBOutlet weak var storiesCollectionView: UICollectionView!
+    @IBOutlet weak var seriesCollectionView: UICollectionView!
     @IBOutlet weak var characterThumbnail: UIImageView!
     
     @IBOutlet weak var characterName: UILabel!
     @IBOutlet weak var characterDesciption: UILabel!
-    
-    
+    @IBOutlet weak var descriptionLabel: UILabel!
+    var collectionViewsDictionary = Dictionary<UICollectionView,[CharacterDetails]>()
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.comicsCollectionView.delegate = self
-        self.comicsCollectionView.dataSource = self
         self.setLabels()
+        self.setCollectionViewsProperties()
         characterDetailsPresenter = CharacterDetailsPresenter(characterDetailsView: self)
         characterDetailsPresenter.loadCharacterDetails(characterID: self.marvelCharacter.id)
+    }
+    
+    func setCollectionViewsProperties(){
+        self.comicsCollectionView.delegate = self
+        self.comicsCollectionView.dataSource = self
+        self.storiesCollectionView.delegate = self
+        self.seriesCollectionView.delegate = self
+        self.eventsCollectionView.delegate = self
+        
+        self.storiesCollectionView.dataSource = self
+        self.seriesCollectionView.dataSource = self
+        self.eventsCollectionView.dataSource = self
     }
     
     func setLabels(){
         let url = URL(string: marvelCharacter.thumbnailPath + "." + marvelCharacter.thumbnailExtenstion)
         self.characterThumbnail.kf.setImage(with: url)
         self.characterName.text = marvelCharacter.name
-        self.characterDesciption.text = marvelCharacter.description
+        if(!marvelCharacter.description.isEmpty){
+            self.characterDesciption.text = marvelCharacter.description
+        }
+        else{
+            self.descriptionLabel.isHidden = true
+            self.characterDesciption.isHidden = true
+        }
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return characterComics.count
+        if (self.collectionViewsDictionary[collectionView] == nil){
+            return 0
+        }
+        return self.collectionViewsDictionary[collectionView]!.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CharacterDetailsCollectionViewCell", for: indexPath) as! CharacterDetailsCollectionViewCell
-        cell.renderCharacter(characterDetails: self.characterComics[indexPath.row])
+        cell.renderCharacter(characterDetails: self.collectionViewsDictionary[collectionView]![indexPath.row])
         return cell
     }
 
@@ -58,30 +83,30 @@ class CharacterDetailsViewController: UIViewController, UICollectionViewDelegate
 }
 
 extension CharacterDetailsViewController:CharacterDetailsView{
-    func startLoading() {
-        BusyLoader.showBusyIndicator(mainView: self.view)
-    }
-    
-    func finishLoading() {
-        BusyLoader.hideBusyIndicator()
-    }
-    
     func setCharacterComics(characterComics: [CharacterDetails]) {
         self.characterComics = characterComics
-        print("Comics loaded")
-        self.comicsCollectionView.reloadData()
+        self.reloadActiveCollectionView(activeCollectionView: self.comicsCollectionView, characterDetails: self.characterComics)
     }
     
     func setCharacterStories(characterStories: [CharacterDetails]) {
+        
         self.characterStories = characterStories
+        self.reloadActiveCollectionView(activeCollectionView: self.storiesCollectionView, characterDetails: self.characterStories)
     }
     
     func setCharacterEvents(characterEvents: [CharacterDetails]) {
         self.characterEvents = characterEvents
+        self.reloadActiveCollectionView(activeCollectionView: self.eventsCollectionView, characterDetails: self.characterEvents)
     }
     
     func setCharacterSeries(characterSeries: [CharacterDetails]) {
         self.characterSeries = characterSeries
+        self.reloadActiveCollectionView(activeCollectionView: self.seriesCollectionView, characterDetails: self.characterSeries)
+    }
+    
+    func reloadActiveCollectionView(activeCollectionView:UICollectionView, characterDetails:[CharacterDetails]){
+        collectionViewsDictionary[activeCollectionView] = characterDetails
+        activeCollectionView.reloadData()
     }
     
     func setErrorLoading(status: String) {

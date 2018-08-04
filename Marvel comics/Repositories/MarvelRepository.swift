@@ -10,10 +10,12 @@ import Foundation
 class MarvelRepository{
     static let sharedMarvelRepository=MarvelRepository()
     fileprivate var marvelCharacterRepository:MarvelCharactersRepository
+    fileprivate var marvelCharacterDetailsRepository:MarvelCharacterDetailsRepository
     fileprivate var keys: Dictionary<String, String>!
     
     fileprivate init(){
         marvelCharacterRepository = MarvelCharactersRepository()
+        marvelCharacterDetailsRepository = MarvelCharacterDetailsRepository()
     }
     
     func getKeys() -> Dictionary<String, String> {
@@ -25,5 +27,9 @@ class MarvelRepository{
     
     func getMarvelCharactersRepository() -> MarvelCharactersRepository{
         return marvelCharacterRepository
+    }
+    
+    func getMarvelCharacterDetailsRepository() -> MarvelCharacterDetailsRepository{
+        return marvelCharacterDetailsRepository
     }
 }

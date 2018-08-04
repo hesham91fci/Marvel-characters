@@ -1,5 +1,5 @@
 //
-//  MarvelStory.swift
+//  MarvelComic.swift
 //  Marvel comics
 //
 //  Created by Hesham Ali on 8/4/18.
@@ -8,7 +8,7 @@
 
 import Foundation
 import ObjectMapper
-class MarvelStory: Mappable {
+class CharacterDetails : Mappable{
     var thumbnailPath:String!
     var thumbnailExtenstion:String!
     var title:String!
@@ -21,4 +21,5 @@ class MarvelStory: Mappable {
         thumbnailPath         <- map["thumbnail.path"]
         thumbnailExtenstion      <- map["thumbnail.extension"]
     }
+    
 }

@@ -12,8 +12,8 @@ class CharacterDetailsCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var characterThumbnail: UIImageView!
     
-    func renderCharacter(marvelCharacter:MarvelCharacter){
-        let url = URL(string: marvelCharacter.thumbnailPath + "." + marvelCharacter.thumbnailExtenstion)
+    func renderCharacter(characterDetails:CharacterDetails){
+        let url = URL(string: characterDetails.thumbnailPath + "." + characterDetails.thumbnailExtenstion)
         self.characterThumbnail.kf.setImage(with: url)
     }
 }

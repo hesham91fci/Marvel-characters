@@ -9,18 +9,22 @@
 import Foundation
 import ObjectMapper
 class MarvelCharacter: Mappable{
-    var thumbnailPath:String!
-    var name:String!
-    var thumbnailExtenstion:String!
     static var totalCharactersPerCall:Int!
     static var totalCharacters:Int!
+    var id:Int!
+    var name:String!
+    var thumbnailPath:String!
+    var thumbnailExtenstion:String!
+    var description:String!
     required init?(map: Map) {
         
     }
     
     func mapping(map: Map) {
+        id <- map["id"]
         name    <- map["name"]
         thumbnailPath         <- map["thumbnail.path"]
         thumbnailExtenstion      <- map["thumbnail.extension"]
+        description      <- map["description"]
     }
 }

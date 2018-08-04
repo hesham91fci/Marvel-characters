@@ -69,10 +69,10 @@ class CharactersTableViewController: UIViewController, UITableViewDelegate,UITab
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cellCharachters = searchController.isActive ? filteredCharacters : marvelCharacters
+        let cellCharacters = searchController.isActive ? filteredCharacters : marvelCharacters
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "CharacterTableViewCell", for: indexPath) as! CharacterTableViewCell
-        cell.renderCharacter(marvelCharacter: cellCharachters[indexPath.row])
+        cell.renderCharacter(marvelCharacter: cellCharacters[indexPath.row])
         return cell
     }
     
@@ -95,22 +95,18 @@ class CharactersTableViewController: UIViewController, UITableViewDelegate,UITab
             }
         }
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let cellCharacters = searchController.isActive ? filteredCharacters : marvelCharacters
+        let characterDetailsVC = self.storyboard?.instantiateViewController(withIdentifier: "CharacterDetailsViewController") as! CharacterDetailsViewController
+        characterDetailsVC.marvelCharacter = cellCharacters[indexPath.row]
+        self.navigationController?.pushViewController(characterDetailsVC, animated: true)
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 }
 
 extension CharactersTableViewController:CharacterView{

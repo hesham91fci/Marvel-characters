@@ -8,40 +8,83 @@
 
 import UIKit
 
-class CharactersTableViewController: UIViewController, UITableViewDelegate,UITableViewDataSource {
+class CharactersTableViewController: UIViewController, UITableViewDelegate,UITableViewDataSource, UISearchResultsUpdating, UISearchBarDelegate {
     
     var characterPresenter:CharacterPresenter!
     var offset=0
     var marvelCharacters=[MarvelCharacter]()
+    var filteredCharacters = [MarvelCharacter]()
+    var searchController = UISearchController(searchResultsController: nil)
     @IBOutlet weak var characterTableView: UITableView!
+    @IBOutlet weak var filteredCharactersTableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         let logo = UIImage(named: "Marvel Icon")
         let logoImageView = UIImageView(image:logo)
         self.navigationItem.titleView = logoImageView
+        
+        self.searchController.searchResultsUpdater = self
         self.characterTableView.delegate = self
         self.characterTableView.dataSource = self
+        self.filteredCharactersTableView.delegate = self
+        self.filteredCharactersTableView.dataSource = self
+        
         characterPresenter=CharacterPresenter(characterView: self)
         characterPresenter.loadMarvelCharacters(offset: offset)
 
         // Do any additional setup after loading the view.
     }
     
+    @IBAction func searchIconPressed(_ sender: Any) {
+        UIBarButtonItem.appearance(whenContainedInInstancesOf:[UISearchBar.self]).tintColor = UIColor.red
+        searchController.hidesNavigationBarDuringPresentation = false
+    
+        // Make this class the delegate and present the search
+        self.searchController.searchBar.delegate = self
+        present(searchController, animated: true, completion: nil)
+    }
+    
+    func updateSearchResults(for searchController: UISearchController) {
+        
+        if(searchController.isActive){
+            self.filteredCharacters = self.marvelCharacters.filter({ (character: MarvelCharacter) -> Bool in
+                return character.name.contains(searchController.searchBar.text!)
+            })
+            self.characterTableView.isHidden = true
+            self.filteredCharactersTableView.isHidden = false
+            self.filteredCharactersTableView.reloadData()
+        }
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        self.characterTableView.isHidden = false
+        self.filteredCharactersTableView.isHidden = true
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return marvelCharacters.count
+        if tableView == self.characterTableView{
+            return marvelCharacters.count
+        }
+        else{
+            return filteredCharacters.count
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cellCharachters = searchController.isActive ? filteredCharacters : marvelCharacters
+        
         let cell = tableView.dequeueReusableCell(withIdentifier: "CharacterTableViewCell", for: indexPath) as! CharacterTableViewCell
-        cell.renderCharacter(marvelCharacter: marvelCharacters[indexPath.row])
+        cell.renderCharacter(marvelCharacter: cellCharachters[indexPath.row])
         return cell
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        view.endEditing(true)
-        self.loadMoreCharacters(scrollView: scrollView)
         
+            view.endEditing(true)
+        if(self.characterTableView == scrollView){
+            self.loadMoreCharacters(scrollView: scrollView)
+        }
     }
     
     func loadMoreCharacters(scrollView: UIScrollView) {

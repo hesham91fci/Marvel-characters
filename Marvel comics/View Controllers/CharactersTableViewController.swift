@@ -48,12 +48,9 @@ class CharactersTableViewController: UIViewController, UITableViewDelegate,UITab
     func updateSearchResults(for searchController: UISearchController) {
         
         if(searchController.isActive){
-            self.filteredCharacters = self.marvelCharacters.filter({ (character: MarvelCharacter) -> Bool in
-                return character.name.contains(searchController.searchBar.text!)
-            })
+            characterPresenter.loadMarvelCharacters(offset: self.offset, name: searchController.searchBar.text)
             self.characterTableView.isHidden = true
             self.filteredCharactersTableView.isHidden = false
-            self.filteredCharactersTableView.reloadData()
         }
     }
     
@@ -122,8 +119,15 @@ extension CharactersTableViewController:CharacterView{
     }
     
     func setCharacters(marvelCharacters: [MarvelCharacter]) {
-        self.marvelCharacters.append(contentsOf: marvelCharacters)
-        self.characterTableView.reloadData()
+        
+        if(!self.searchController.isActive){
+            self.marvelCharacters.append(contentsOf: marvelCharacters)
+            self.characterTableView.reloadData()
+        }
+        else{
+            self.filteredCharacters=marvelCharacters
+            self.filteredCharactersTableView.reloadData()
+        }
     }
     
     func setCharacterDetails(marvelCharacter: MarvelCharacter) {

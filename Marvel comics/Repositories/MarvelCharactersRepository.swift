@@ -11,13 +11,19 @@ import Alamofire
 import CryptoSwift
 import ObjectMapper
 class MarvelCharactersRepository : CharacterRepository{
-    func loadMarvelCharacters(offest offset:Int, completionHandler: @escaping (_ errorDescription: String, _ data: [MarvelCharacter]) -> Void){
+    func loadMarvelCharacters(offest offset:Int,name:String?, completionHandler: @escaping (_ errorDescription: String, _ data: [MarvelCharacter]) -> Void){
         
         let keys = MarvelRepository.sharedMarvelRepository.getKeys()
         let urlPath = NSLocalizedString("HOST_URL", comment: "comment") + NSLocalizedString("CHARACTER_ENDPOINT", comment: "comment")
         let ts = NSDate().timeIntervalSince1970.description
-        
-        let params: Parameters = [
+        let params: Parameters = (name != nil) ? [
+            "apikey": keys["public key"]!,
+            "ts": ts,
+            "name":name!,
+            "hash": (ts + keys["private key"]! + keys["public key"]!).md5(),
+            "offset":"\(offset)"
+            ]:
+        [
             "apikey": keys["public key"]!,
             "ts": ts,
             "hash": (ts + keys["private key"]! + keys["public key"]!).md5(),

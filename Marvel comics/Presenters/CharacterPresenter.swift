@@ -21,9 +21,9 @@ class CharacterPresenter{
     init(characterView:CharacterView) {
         self.characterView = characterView
     }
-    func loadMarvelCharacters(offset:Int){
+    func loadMarvelCharacters(offset:Int,name:String?=nil){
         characterView.startLoading()
-        MarvelRepository.sharedMarvelRepository.getMarvelCharactersRepository().loadMarvelCharacters(offest: offset) { (status, marvelCharacters) in
+        MarvelRepository.sharedMarvelRepository.getMarvelCharactersRepository().loadMarvelCharacters(offest: offset, name: name) { (status, marvelCharacters) in
             self.characterView.finishLoading()
             if(!status.isEmpty){
                 self.characterView.setErrorLoading(status: status)

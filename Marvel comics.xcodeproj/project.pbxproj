@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		043CB837211635A1008028E7 /* RelatedLinksTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043CB836211635A1008028E7 /* RelatedLinksTableViewCell.swift */; };
 		044DFCB22113A0E000C03FB9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044DFCB12113A0DF00C03FB9 /* AppDelegate.swift */; };
 		044DFCB92113A0E100C03FB9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 044DFCB82113A0E100C03FB9 /* Assets.xcassets */; };
 		044DFCBC2113A0E100C03FB9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 044DFCBA2113A0E100C03FB9 /* LaunchScreen.storyboard */; };
@@ -56,6 +57,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		043CB836211635A1008028E7 /* RelatedLinksTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelatedLinksTableViewCell.swift; sourceTree = "<group>"; };
 		044DFCAE2113A0DF00C03FB9 /* Marvel comics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Marvel comics.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		044DFCB12113A0DF00C03FB9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		044DFCB82113A0E100C03FB9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -251,6 +253,7 @@
 			isa = PBXGroup;
 			children = (
 				0491526C211469F50054DB82 /* CharacterTableViewCell.swift */,
+				043CB836211635A1008028E7 /* RelatedLinksTableViewCell.swift */,
 			);
 			path = "Table view cells";
 			sourceTree = "<group>";
@@ -510,6 +513,7 @@
 			files = (
 				044DFCF12113A22400C03FB9 /* MarvelCharactersRepository.swift in Sources */,
 				049152602113B55D0054DB82 /* CharacterDetailsViewController.swift in Sources */,
+				043CB837211635A1008028E7 /* RelatedLinksTableViewCell.swift in Sources */,
 				049152782115C4010054DB82 /* CharacterDetails.swift in Sources */,
 				0491526A2113B8AD0054DB82 /* BusyLoader.swift in Sources */,
 				049152842115EC030054DB82 /* CharacterDetailsPresenter.swift in Sources */,

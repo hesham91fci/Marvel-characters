@@ -27,14 +27,23 @@ class CharacterDetailsViewController: UIViewController, UICollectionViewDelegate
     @IBOutlet weak var characterName: UILabel!
     @IBOutlet weak var characterDesciption: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
+    @IBOutlet weak var relatedLinksTableView: UITableView!
+    
     var collectionViewsDictionary = Dictionary<UICollectionView,[CharacterDetails]>()
-
+    let relatedLinks = ["Detail","Wiki","Comic Link"]
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setLabels()
         self.setCollectionViewsProperties()
+        self.setTableViewsProperties()
+        self.relatedLinksTableView.reloadData()
         characterDetailsPresenter = CharacterDetailsPresenter(characterDetailsView: self)
         characterDetailsPresenter.loadCharacterDetails(characterID: self.marvelCharacter.id)
+    }
+    
+    func setTableViewsProperties(){
+        self.relatedLinksTableView.delegate = self
+        self.relatedLinksTableView.dataSource = self
     }
     
     func setCollectionViewsProperties(){
@@ -111,6 +120,20 @@ extension CharacterDetailsViewController:CharacterDetailsView{
     
     func setErrorLoading(status: String) {
         
+    }
+    
+    
+}
+
+extension CharacterDetailsViewController:UITableViewDelegate,UITableViewDataSource{
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.relatedLinks.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "RelatedLinksTableViewCell", for: indexPath) as! RelatedLinksTableViewCell
+        cell.linkLabel.text = self.relatedLinks[indexPath.row]
+        return cell
     }
     
     

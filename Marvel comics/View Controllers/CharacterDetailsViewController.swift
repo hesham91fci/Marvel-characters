@@ -8,13 +8,13 @@
 
 import UIKit
 import Kingfisher
+struct ActiveResource{
+    let characterDetails:[CharacterDetails]
+    let detailsLabel:UILabel!
+}
 class CharacterDetailsViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
     
     var marvelCharacter:MarvelCharacter!
-    var characterComics = [CharacterDetails]()
-    var characterStories = [CharacterDetails]()
-    var characterEvents = [CharacterDetails]()
-    var characterSeries = [CharacterDetails]()
     
     var characterDetailsPresenter:CharacterDetailsPresenter!
     @IBOutlet weak var comicsCollectionView: UICollectionView!
@@ -29,7 +29,12 @@ class CharacterDetailsViewController: UIViewController, UICollectionViewDelegate
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var relatedLinksTableView: UITableView!
     
-    var collectionViewsDictionary = Dictionary<UICollectionView,[CharacterDetails]>()
+    @IBOutlet weak var comicsLabel: UILabel!
+    @IBOutlet weak var seriesLabel: UILabel!
+    @IBOutlet weak var storiesLabel: UILabel!
+    @IBOutlet weak var eventsLabel: UILabel!
+    
+    var collectionViewsDictionary = Dictionary<UICollectionView,ActiveResource>()
     let relatedLinks = ["Detail","Wiki","Comic Link"]
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -76,15 +81,21 @@ class CharacterDetailsViewController: UIViewController, UICollectionViewDelegate
         if (self.collectionViewsDictionary[collectionView] == nil){
             return 0
         }
-        return self.collectionViewsDictionary[collectionView]!.count
+        if(self.collectionViewsDictionary[collectionView]?.characterDetails.count == 0){
+            self.collectionViewsDictionary[collectionView]?.detailsLabel.isHidden = true
+        }
+        return self.collectionViewsDictionary[collectionView]!.characterDetails.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CharacterDetailsCollectionViewCell", for: indexPath) as! CharacterDetailsCollectionViewCell
-        cell.renderCharacter(characterDetails: self.collectionViewsDictionary[collectionView]![indexPath.row])
+        cell.renderCharacter(characterDetails: self.collectionViewsDictionary[collectionView]!.characterDetails[indexPath.row])
         return cell
     }
 
+    @IBAction func back(_ sender: Any) {
+        self.navigationController?.popViewController(animated: true)
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -93,28 +104,27 @@ class CharacterDetailsViewController: UIViewController, UICollectionViewDelegate
 
 extension CharacterDetailsViewController:CharacterDetailsView{
     func setCharacterComics(characterComics: [CharacterDetails]) {
-        self.characterComics = characterComics
-        self.reloadActiveCollectionView(activeCollectionView: self.comicsCollectionView, characterDetails: self.characterComics)
+        
+        self.reloadActiveCollectionView(activeCollectionView: self.comicsCollectionView, activeResource: ActiveResource(characterDetails: characterComics, detailsLabel: self.comicsLabel))
     }
     
     func setCharacterStories(characterStories: [CharacterDetails]) {
         
-        self.characterStories = characterStories
-        self.reloadActiveCollectionView(activeCollectionView: self.storiesCollectionView, characterDetails: self.characterStories)
+        
+        self.reloadActiveCollectionView(activeCollectionView: self.storiesCollectionView, activeResource: ActiveResource(characterDetails: characterStories, detailsLabel: self.storiesLabel))
     }
     
     func setCharacterEvents(characterEvents: [CharacterDetails]) {
-        self.characterEvents = characterEvents
-        self.reloadActiveCollectionView(activeCollectionView: self.eventsCollectionView, characterDetails: self.characterEvents)
+        self.reloadActiveCollectionView(activeCollectionView: self.eventsCollectionView, activeResource: ActiveResource(characterDetails: characterEvents, detailsLabel: self.eventsLabel))
     }
     
     func setCharacterSeries(characterSeries: [CharacterDetails]) {
-        self.characterSeries = characterSeries
-        self.reloadActiveCollectionView(activeCollectionView: self.seriesCollectionView, characterDetails: self.characterSeries)
+        
+        self.reloadActiveCollectionView(activeCollectionView: self.seriesCollectionView, activeResource: ActiveResource(characterDetails: characterSeries, detailsLabel: self.seriesLabel))
     }
     
-    func reloadActiveCollectionView(activeCollectionView:UICollectionView, characterDetails:[CharacterDetails]){
-        collectionViewsDictionary[activeCollectionView] = characterDetails
+    func reloadActiveCollectionView(activeCollectionView:UICollectionView, activeResource:ActiveResource){
+        collectionViewsDictionary[activeCollectionView] = activeResource
         activeCollectionView.reloadData()
     }
     
